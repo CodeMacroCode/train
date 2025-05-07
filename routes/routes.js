@@ -8,7 +8,7 @@ const {
 
 router.post("/add", createSpeedAndDistance);
 
-router.get("/gelAll", getAllRecords);
+router.get("/getAll", getAllRecords);
 
 router.get("/vehicle/:vehicleId", getRecordByVehicleId);
 
