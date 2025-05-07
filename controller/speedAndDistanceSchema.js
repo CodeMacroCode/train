@@ -1,15 +1,34 @@
 const SpeedAndDistance = require("../models/speedAndDistance");
 
+// exports.createSpeedAndDistance = async (req, res) => {
+//   try {
+//     const { srInKmph, effectiveKms } = req.body;
+
+//     if (!srInKmph || !effectiveKms) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
+
+//     const newRecord = new SpeedAndDistance({
+//       srInKmph,
+//       effectiveKms,
+//     });
+
+//     const savedRecord = await newRecord.save();
+//     res.status(201).json(savedRecord);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 exports.createSpeedAndDistance = async (req, res) => {
   try {
-    const { srInKmph, effectiveKms } = req.body;
+    const { effectiveKms } = req.body;
 
-    if (!srInKmph || !effectiveKms) {
+    if (!effectiveKms) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const newRecord = new SpeedAndDistance({
-      srInKmph,
       effectiveKms,
     });
 
