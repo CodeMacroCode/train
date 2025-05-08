@@ -22,14 +22,17 @@ const SpeedAndDistance = require("../models/speedAndDistance");
 
 exports.createSpeedAndDistance = async (req, res) => {
   try {
-    const { effectiveKms } = req.body;
+    let { effectiveKms } = req.body;
 
-    if (!effectiveKms) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!effectiveKms || !Array.isArray(effectiveKms)) {
+      return res.status(400).json({ message: "effectiveKms must be an array" });
     }
 
+    // Flatten and split entries like "383/09-381/21" into ["383/09", "381/21"]
+    const processedKms = effectiveKms.flatMap((entry) => entry.split("-"));
+
     const newRecord = new SpeedAndDistance({
-      effectiveKms,
+      effectiveKms: processedKms,
     });
 
     const savedRecord = await newRecord.save();
