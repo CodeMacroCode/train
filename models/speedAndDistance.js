@@ -9,6 +9,11 @@ const speedAndDistance = new mongoose.Schema({
     type: [String],
     // required: true,
   },
+  vehicleId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Vehicle",
+    // required: true,
+  },
   date: {
     type: Date,
     default: Date.now,
