@@ -5,7 +5,10 @@ const {
   getAllRecords,
   getRecordByVehicleId,
 } = require("../controller/speedAndDistance");
-const { createPoleAndLatLang } = require("../controller/poleAndLatLang");
+const {
+  createPoleAndLatLang,
+  getPoleAndLatLang,
+} = require("../controller/poleAndLatLang");
 
 // for pole and speed
 router.post("/add", createSpeedAndDistance);
@@ -14,5 +17,5 @@ router.get("/vehicle/:vehicleId", getRecordByVehicleId);
 
 // for pole and lat long
 router.post("/pole", createPoleAndLatLang);
-
+router.get("/pole", getPoleAndLatLang);
 module.exports = router;

@@ -1,4 +1,5 @@
 const SpeedAndDistance = require("../models/speedAndDistance");
+const PoleAndLatLong = require("../models/poleAndLatLong");
 
 // exports.createSpeedAndDistance = async (req, res) => {
 //   try {
@@ -22,12 +23,12 @@ const SpeedAndDistance = require("../models/speedAndDistance");
 
 exports.createSpeedAndDistance = async (req, res) => {
   try {
-    let { effectiveKms, srInKmph, vehicleId } = req.body;
+    const { effectiveKms, srInKmph, vehicleId } = req.body;
 
     if (!Array.isArray(effectiveKms) || !Array.isArray(srInKmph)) {
-      return res
-        .status(400)
-        .json({ message: "effectiveKms and srInKmph must be arrays" });
+      return res.status(400).json({
+        message: "effectiveKms and srInKmph must be arrays",
+      });
     }
 
     if (effectiveKms.length !== srInKmph.length) {
@@ -36,17 +37,38 @@ exports.createSpeedAndDistance = async (req, res) => {
       });
     }
 
-    const combinedData = effectiveKms.map((entry, index) => {
-      const [pole1, pole2] = entry.split("-");
-      return {
-        pole1,
-        pole2,
-        srInKmph: srInKmph[index],
-      };
-    });
+    // Enrich each entry with pole lat/long info
+    const combinedData = await Promise.all(
+      effectiveKms.map(async (entry, index) => {
+        const [pole1Str, pole2Str] = entry.split("-");
+
+        const pole1Data = await PoleAndLatLong.findOne({ pole: pole1Str });
+        const pole2Data = await PoleAndLatLong.findOne({ pole: pole2Str });
+
+        if (!pole1Data || !pole2Data) {
+          throw new Error(
+            `Lat/Long not found for poles: ${pole1Str}, ${pole2Str}`
+          );
+        }
+
+        return {
+          pole1: {
+            pole: pole1Str,
+            latitude: pole1Data.latitude,
+            longitude: pole1Data.longitude,
+          },
+          pole2: {
+            pole: pole2Str,
+            latitude: pole2Data.latitude,
+            longitude: pole2Data.longitude,
+          },
+          srInKmph: srInKmph[index],
+        };
+      })
+    );
 
     const newRecord = new SpeedAndDistance({
-      vehicleId,
+      vehicleId, // optional if not required in schema
       date: new Date(),
       effectiveKms: combinedData,
     });
@@ -61,14 +83,17 @@ exports.createSpeedAndDistance = async (req, res) => {
 // Get all records
 exports.getAllRecords = async (req, res) => {
   try {
-    const records = await SpeedAndDistance.find().populate("vehicleId");
+    const records = await SpeedAndDistance.find(
+      {},
+      { vehicleId: 0, __v: 0 }
+    ).sort({ date: -1 });
     res.status(200).json(records);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get records by vehicleId
+// Get records by pole and lat long
 exports.getRecordByVehicleId = async (req, res) => {
   try {
     const { vehicleId } = req.params;

@@ -1,10 +1,16 @@
 const mongoose = require("mongoose");
 
-const speedAndDistance = new mongoose.Schema({
+const poleSchema = new mongoose.Schema({
+  pole: String,
+  latitude: Number,
+  longitude: Number,
+});
+
+const speedAndDistanceSchema = new mongoose.Schema({
   effectiveKms: [
     {
-      pole1: String,
-      pole2: String,
+      pole1: poleSchema,
+      pole2: poleSchema,
       srInKmph: Number,
     },
   ],
@@ -18,4 +24,4 @@ const speedAndDistance = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("SpeedAndDistance", speedAndDistance);
+module.exports = mongoose.model("SpeedAndDistance", speedAndDistanceSchema);
