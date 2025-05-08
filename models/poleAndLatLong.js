@@ -1,21 +1,17 @@
 const mongoose = require("mongoose");
 
 const poleAndLatLong = new mongoose.Schema({
+  latitude: {
+    type: Number,
+    // required: true,
+  },
+  longitude: {
+    type: Number,
+    // required: true,
+  },
   pole: {
     type: String,
     // required: true,
-  },
-  lat: {
-    type: Number,
-    // required: true,
-  },
-  lng: {
-    type: Number,
-    // required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
   },
 });
 
