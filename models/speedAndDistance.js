@@ -1,18 +1,16 @@
 const mongoose = require("mongoose");
 
 const speedAndDistance = new mongoose.Schema({
-  srInKmph: {
-    type: [Number],
-    // required: true,
-  },
-  effectiveKms: {
-    type: [String],
-    // required: true,
-  },
+  effectiveKms: [
+    {
+      pole1: String,
+      pole2: String,
+      srInKmph: Number,
+    },
+  ],
   vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Vehicle",
-    // required: true,
   },
   date: {
     type: Date,

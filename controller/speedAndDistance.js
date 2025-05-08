@@ -22,17 +22,33 @@ const SpeedAndDistance = require("../models/speedAndDistance");
 
 exports.createSpeedAndDistance = async (req, res) => {
   try {
-    let { effectiveKms } = req.body;
+    let { effectiveKms, srInKmph, vehicleId } = req.body;
 
-    if (!effectiveKms || !Array.isArray(effectiveKms)) {
-      return res.status(400).json({ message: "effectiveKms must be an array" });
+    if (!Array.isArray(effectiveKms) || !Array.isArray(srInKmph)) {
+      return res
+        .status(400)
+        .json({ message: "effectiveKms and srInKmph must be arrays" });
     }
 
-    // Flatten and split entries like "383/09-381/21" into ["383/09", "381/21"]
-    const processedKms = effectiveKms.flatMap((entry) => entry.split("-"));
+    if (effectiveKms.length !== srInKmph.length) {
+      return res.status(400).json({
+        message: "effectiveKms and srInKmph arrays must be of the same length",
+      });
+    }
+
+    const combinedData = effectiveKms.map((entry, index) => {
+      const [pole1, pole2] = entry.split("-");
+      return {
+        pole1,
+        pole2,
+        srInKmph: srInKmph[index],
+      };
+    });
 
     const newRecord = new SpeedAndDistance({
-      effectiveKms: processedKms,
+      vehicleId,
+      date: new Date(),
+      effectiveKms: combinedData,
     });
 
     const savedRecord = await newRecord.save();
