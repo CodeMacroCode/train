@@ -57,13 +57,14 @@ exports.createSpeedAndDistance = async (req, res) => {
             pole: pole1Str,
             latitude: pole1Data.latitude,
             longitude: pole1Data.longitude,
+            srInKmph: srInKmph[index],
           },
           pole2: {
             pole: pole2Str,
             latitude: pole2Data.latitude,
             longitude: pole2Data.longitude,
+            srInKmph: srInKmph[index],
           },
-          srInKmph: srInKmph[index],
         };
       })
     );
