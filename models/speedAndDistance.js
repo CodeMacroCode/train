@@ -4,6 +4,7 @@ const poleSchema = new mongoose.Schema({
   pole: String,
   latitude: Number,
   longitude: Number,
+  srInKmph: Number,
 });
 
 const speedAndDistanceSchema = new mongoose.Schema({
@@ -11,7 +12,6 @@ const speedAndDistanceSchema = new mongoose.Schema({
     {
       pole1: poleSchema,
       pole2: poleSchema,
-      srInKmph: Number,
     },
   ],
   vehicleId: {

@@ -178,13 +178,14 @@ exports.uploadExcelAndSave = async (req, res) => {
             pole: pole1Str,
             latitude: pole1Data.latitude,
             longitude: pole1Data.longitude,
+            srInKmph: item.srInKmph,
           },
           pole2: {
             pole: pole2Str,
             latitude: pole2Data.latitude,
             longitude: pole2Data.longitude,
+            srInKmph: item.srInKmph,
           },
-          srInKmph: item.srInKmph,
         };
       })
     );
